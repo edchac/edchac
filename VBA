@@ -1,0 +1,124 @@
+
+Sub GuardarComoCSV()
+
+Application.ScreenUpdating = False
+
+    Columns("A:A").Select
+    Application.CutCopyMode = False
+    Selection.NumberFormat = "00000000000000"
+    Columns("B:B").Select
+    Selection.NumberFormat = "000000000"
+    Columns("C:C").Select
+    Selection.NumberFormat = "000000"
+    Columns("D:D").Select
+    Selection.NumberFormat = "000"
+    Columns("F:F").Select
+    Selection.NumberFormat = "00"
+    Columns("G:G").Select
+    Selection.NumberFormat = "000000000"
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 5
+    ActiveWindow.ScrollColumn = 6
+    ActiveWindow.ScrollColumn = 7
+    Columns("N:N").Select
+    Selection.NumberFormat = "0.00"
+    Columns("O:O").Select
+    Selection.NumberFormat = "0.00"
+    Columns("P:P").Select
+    Selection.NumberFormat = "0.00"
+    Columns("S:S").Select
+    Selection.NumberFormat = "00"
+    Columns("T:T").Select
+    Selection.NumberFormat = "00"
+    Columns("U:U").Select
+    Selection.NumberFormat = "00"
+    ActiveWindow.ScrollColumn = 5
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 1
+    
+    Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    
+  ' Definir el rango a guardar
+Dim rangoguardar As Range
+Set rangoguardar = ThisWorkbook.Sheets("Hoja1").Range("A2:U" & Cells(Rows.Count, "U").End(xlUp).Row)
+
+
+' Definir el nombre y ubicación del archivo a guardar
+Dim nombrearchivo As String
+nombrearchivo = ThisWorkbook.Path & "\Planilla.csv"
+
+
+' Copiar el rango a un nuevo libro de trabajo
+rangoguardar.Copy
+Workbooks.Add
+Range("A1").PasteSpecial xlPasteValues
+Application.DisplayAlerts = False
+ActiveWorkbook.SaveAs Filename:=nombrearchivo, FileFormat:=xlCSV, CreateBackup:=False
+ActiveWorkbook.Close SaveChanges:=False
+Application.DisplayAlerts = True
+
+
+' Eliminar filas vacías del archivo CSV
+Dim csvTexto As String
+Open nombrearchivo For Input As #1
+csvTexto = Input(LOF(1), 1)
+Close #1
+csvTexto = Replace(csvTexto, vbCrLf, vbLf)
+csvTexto = Replace(csvTexto, vbLf & vbLf, vbLf)
+Open nombrearchivo For Output As #1
+Print #1, csvTexto;
+Close #1
+
+
+ActiveWorkbook.RefreshAll
+Application.ScreenUpdating = True
+Application.DisplayAlerts = True
+Application.Calculation = xlCalculationAutomatic
+End Sub
+
+
+
